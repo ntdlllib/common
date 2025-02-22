@@ -1279,7 +1279,7 @@ function update_repo() {
 	local branch_head="$(git rev-parse --abbrev-ref HEAD)"
 	if [[ "$ENABLE_REPO_UPDATE" == "true" ]]; then
 		git add .
-		git commit -m "[$MATRIX_TARGET] Update plugins, $CONFIG_FILE and settings.ini, etc. "
+		git commit -m "[$MATRIX_TARGET] Update $CONFIG_FILE and settings.ini, etc. "
 		git push --force "https://$REPO_TOKEN@github.com/$GITHUB_REPOSITORY" HEAD:$branch_head
 		__success_msg "Your branch origin/$branch_head is now up to the latest."
 	else
@@ -1395,7 +1395,7 @@ function release_info() {
 	
 	if [[ "$FIRMWARE_TYPE" == "lxc" ]]; then
 		cat >> $RELEASEINFO_MD <<-EOF
-		注：「lxc容器专用」
+		注:「lxc容器专用」
 		EOF
 	fi
 
