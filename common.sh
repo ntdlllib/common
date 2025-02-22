@@ -1409,28 +1409,3 @@ function release_info() {
 
 	cat $RELEASEINFO_MD
 }
-
-################################################################################################################
-# 解锁固件分区：Bootloader、Bdata、factory、reserved0, ramips系列路由器专用(固件编译前)
-################################################################################################################
-function unlock_bootloader() {
-	if [[ $TARGET_BOARD == "ramips" ]]; then		
-		if [[ -f "target/linux/$TARGET_BOARD/dts/${TARGET_SUBTARGET}_${TARGET_DEVICE}.dts" ]]; then
-			local dts_file="target/linux/$TARGET_BOARD/dts/${TARGET_SUBTARGET}_${TARGET_DEVICE}.dts"
-		elif [[ -f "target/linux/$TARGET_BOARD/dts/${TARGET_SUBTARGET}_${TARGET_PROFILE}.dts" ]]; then
-			local dts_file="target/linux/$TARGET_BOARD/dts/${TARGET_SUBTARGET}_${TARGET_PROFILE}.dts"	
-		else
-			return
-		fi
-		__info_msg "dts文件：$dts_file"
-		sed -i "/read-only;/d" $dts_file
-		if [[ `grep -c "read-only;" $dts_file` -eq '0' ]]; then
-			__success_msg "固件分区已经解锁！"
-			echo "UNLOCK=true" >> $GITHUB_ENV
-		else
-			__error_msg "固件分区解锁失败！"
-		fi
-	else
-		__warning_msg "非ramips系列, 暂不支持！"
-	fi
-}
