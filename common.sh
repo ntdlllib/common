@@ -1244,7 +1244,6 @@ function update_repo() {
 	local repo_matrix_target_path="$repo_path/build/$MATRIX_TARGET"
 	local repo_config_file="$repo_matrix_target_path/config/$CONFIG_FILE"
 	local repo_settings_ini="$repo_matrix_target_path/settings.ini"
-	local repo_plugins="$repo_matrix_target_path/release/plugins"
 	
 	[[ -d "$repo_path" ]] && rm -rf $repo_path
 
@@ -1273,13 +1272,6 @@ function update_repo() {
 	if [[ "$(cat $DIFFCONFIG_TXT)" != "$(cat $repo_config_file)" ]]; then
 		ENABLE_REPO_UPDATE="true"
 		cp -rf $DIFFCONFIG_TXT $repo_config_file
-	fi
-	
-	# 更新plugins插件列表
-	local plugins="$(grep -Eo "CONFIG_PACKAGE_luci-app-.*=y|CONFIG_PACKAGE_luci-theme-.*=y" $HOME_PATH/.config |grep -v 'INCLUDE\|_Proxy\|_static\|_dynamic' |sed 's/=y//' |sed 's/CONFIG_PACKAGE_//g')"
-	if [[ "$plugins" != "$(cat $repo_plugins)" ]]; then
-		ENABLE_REPO_UPDATE="true"
-		echo "$plugins" > $repo_plugins
 	fi
 	
 	# 提交commit, 更新repo
